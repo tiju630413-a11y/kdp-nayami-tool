@@ -1,0 +1,18 @@
+{
+  "_schema": {
+    "week": "ISO週（例: 2026-W28）",
+    "observed_at": "観測日 YYYY-MM-DD",
+    "sources": "観測源リスト（Q&Aサイト・ニュース・検索トレンドを主、Xは補助・手動）",
+    "topics": [
+      {
+        "topic": "時事トピック名",
+        "context": "どんな悩みの『今の入口』になるか",
+        "related_genre_ids": ["genre_map の関連ID"],
+        "strength": "1-3（plan工程の時事接続ボーナスの重み）",
+        "expires": "この入口が古びる目安 YYYY-MM 。恒常化したら genre_map 側へ昇格"
+      }
+    ],
+    "_rule": "時事は章の導入・事例にのみ使う。本の背骨には使わない（仕様§2-6）"
+  },
+  "weeks": []
+}

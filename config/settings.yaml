@@ -1,0 +1,43 @@
+# KDP悩み系出版支援ツール 設定ファイル
+# 仕様書 §7 準拠。値を変えるだけで運用が変わる（コードに定数を埋めない）
+
+pace_per_week: 2            # 初期値。retro実測に基づき段階的に引き上げ（最大10）
+price_yen: 500
+min_chars: 40000            # 字数下限（style_check で強制）
+max_review_loops: 3         # 自問自答の最大周回（超過時は人間にエスカレーション）
+min_author_assets: 10       # 1冊あたり著者資産の最低採用数
+max_asset_reuse: 3          # 同一資産を使える冊数の上限（使い回し防止）
+weekly_asset_intake_target: 15  # 週次の資産補充目標（残量はretroが監視）
+target_monthly_revenue: 500000
+pen_name: 智珠
+note_account: marvelous1101
+
+# EPUB ビルド
+epub:
+  max_total_mb: 3           # EPUB合計サイズ目安（超過でWARN、3.5MB超でFAIL）
+  image_max_width: 1200     # 本文画像の最大幅（px）。超過分は縮小
+  image_quality: 80         # JPEG再圧縮品質
+  cover_max_width: 1600     # 表紙の最大幅（KDP推奨 1600x2560）
+
+# style_check の閾値（style/guide.md と対で管理。ガイド改定時はここも見直す）
+style_check:
+  kuten_interval_min: 7     # 読点間隔の下限警告（字）
+  kuten_interval_max: 14    # 読点間隔の上限警告（字）※目安9〜11、7未満/14超で指摘
+  max_same_ending_run: 2    # 同一文末の連続許容回数
+  max_paragraph_chars: 400  # 1段落の上限字数（WARN）
+  min_concrete_per_chapter: 3  # 章あたり具体性マーカー（たとえば/ケース/場面等）の最低出現数
+
+# KDP 規約関連（コードでなくデータで持つ）
+kdp:
+  weekly_title_limit: 10        # KDP側の上限。pace_per_week はこれを超えられない
+  limit_reset: "日曜 9:00 JST"
+  ai_disclosure_text: "あり"    # テキスト生成のAI申告
+  ai_disclosure_images: "あり"  # 画像生成のAI申告
+
+models:
+  plan: sonnet
+  draft: opus              # 文体・声の長時間維持に最適
+  review_loop: opus
+  promo: sonnet
+  routine: haiku
+  draft_highpace: sonnet   # 高ペース時は草稿を切替可（品質はゲート側で担保）
