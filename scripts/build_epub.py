@@ -158,10 +158,11 @@ def back_matter_xhtml(meta, owarini_md):
             f"本書とあわせて読んでいただきたいのが、こちらです。\n\n"
             f"**『{meta['next_book_title']}』**（{meta['author']}）\n\n"
             f"{meta.get('next_book_pain_line','')}——そんなあなたに向けて書きました。\n"))
-    parts.append(md_to_xhtml(
-        "## note のご案内\n\n"
-        "本に書ききれなかった話や、日々の観察は note に書いています。\n\n"
-        f"「{meta['author']}」で検索するか、こちらへ: {meta['note_url']}\n"))
+    if meta.get("note_url"):  # アカウント未確定の間は導線を省略（仕様§12）
+        parts.append(md_to_xhtml(
+            "## note のご案内\n\n"
+            "本に書ききれなかった話や、日々の観察は note に書いています。\n\n"
+            f"「{meta['author']}」で検索するか、こちらへ: {meta['note_url']}\n"))
     parts.append(f"""<div class="colophon"><hr/>
 <p><strong>{html.escape(meta['title'])}</strong><br/>{html.escape(meta.get('subtitle',''))}</p>
 <p>{html.escape(pd)}　初版発行</p>

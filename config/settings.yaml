@@ -10,7 +10,12 @@ max_asset_reuse: 3          # 同一資産を使える冊数の上限（使い�
 weekly_asset_intake_target: 15  # 週次の資産補充目標（残量はretroが監視）
 target_monthly_revenue: 500000
 pen_name: 智珠
-note_account: marvelous1101
+
+# 発信アカウント（仕様§12: 唯一の出所。新設・変更時はここを書き換えて build 再実行）
+# note_url が空の間は、巻末のnote導線ブロックを自動で省略する
+note_account: marvelous1101   # 既存。書籍用に新設したらここを差し替え
+note_url: "https://note.com/marvelous1101"
+x_account: ""                 # 新設予定・未定（promo のX投稿はID非依存の文面）
 
 # EPUB ビルド
 epub:
