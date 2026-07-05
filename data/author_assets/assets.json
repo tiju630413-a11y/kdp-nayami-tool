@@ -162,7 +162,8 @@
       "常識の反転"
     ],
     "used_in": [
-      "001_iikaesenai"
+      "001_iikaesenai",
+      "002_joushi_type"
     ],
     "date_added": "2026-07-05"
   },
@@ -177,7 +178,8 @@
       "理不尽な上司"
     ],
     "used_in": [
-      "001_iikaesenai"
+      "001_iikaesenai",
+      "002_joushi_type"
     ],
     "date_added": "2026-07-05"
   },
@@ -192,7 +194,8 @@
       "観察"
     ],
     "used_in": [
-      "001_iikaesenai"
+      "001_iikaesenai",
+      "002_joushi_type"
     ],
     "date_added": "2026-07-05"
   },
@@ -208,7 +211,8 @@
       "常識の反転"
     ],
     "used_in": [
-      "001_iikaesenai"
+      "001_iikaesenai",
+      "002_joushi_type"
     ],
     "date_added": "2026-07-05"
   },
@@ -240,7 +244,8 @@
       "失敗談"
     ],
     "used_in": [
-      "001_iikaesenai"
+      "001_iikaesenai",
+      "002_joushi_type"
     ],
     "date_added": "2026-07-05"
   },
@@ -270,7 +275,8 @@
       "実行装置"
     ],
     "used_in": [
-      "001_iikaesenai"
+      "001_iikaesenai",
+      "002_joushi_type"
     ],
     "date_added": "2026-07-05"
   },
@@ -377,7 +383,9 @@
       "急所",
       "動力源"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -392,7 +400,9 @@
       "失敗回避",
       "地雷"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -407,7 +417,9 @@
       "台詞",
       "分離"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -422,7 +434,9 @@
       "急所",
       "決定権"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -437,7 +451,9 @@
       "急所",
       "動力源"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -452,7 +468,9 @@
       "構造",
       "自責回避"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -467,7 +485,9 @@
       "台詞",
       "労い"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -482,7 +502,9 @@
       "失敗回避",
       "急所"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -497,7 +519,9 @@
       "急所",
       "動力源"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -512,7 +536,9 @@
       "構造",
       "自責回避"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -527,7 +553,9 @@
       "失敗回避",
       "急所"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -542,7 +570,9 @@
       "台詞",
       "分離"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -557,7 +587,9 @@
       "急所",
       "動力源"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -572,7 +604,9 @@
       "台詞",
       "条件付き受諾"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -587,7 +621,9 @@
       "持論",
       "境界線"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   },
   {
@@ -605,7 +641,9 @@
       "見立て",
       "持論"
     ],
-    "used_in": [],
+    "used_in": [
+      "002_joushi_type"
+    ],
     "date_added": "2026-07-05"
   }
 ]
