@@ -47,15 +47,24 @@ p.noindent { text-indent: 0; }
 blockquote { margin: 1em 1.5em; padding-left: 0.8em; border-left: 2px solid #999; }
 ul, ol { margin: 1em 0; padding-left: 2em; }
 img { max-width: 100%; }
+.toc ol { list-style: none; padding-left: 0; margin: 1em 0; }
+.toc ol ol { padding-left: 1.2em; font-size: 0.9em; margin: 0.4em 0 1em; }
+.toc li { margin: 0.5em 0; }
+.toc a { text-decoration: none; }
 .colophon { margin-top: 4em; font-size: 0.9em; }
 .colophon p { text-indent: 0; }
 hr { border: none; border-top: 1px solid #ccc; margin: 2em 0; }
 """
 
 
-def md_to_xhtml(md_text, chapter_title=None):
-    """最小Markdown→XHTML変換（見出し/段落/強調/箇条書き/引用/画像/罫線）。"""
+def md_to_xhtml(md_text, chapter_title=None, headings=None, id_prefix=""):
+    """最小Markdown→XHTML変換（見出し/段落/強調/箇条書き/引用/画像/罫線）。
+
+    headings にリストを渡すと、見出しへ id を振り (level, id, text) を収集する
+    （目次ページ・nav のジャンプ先として使う）。
+    """
     out, in_list, in_quote = [], None, False
+    h_count = [0]
 
     def close_list():
         nonlocal in_list
@@ -81,7 +90,13 @@ def md_to_xhtml(md_text, chapter_title=None):
         if m:
             close_list(); close_quote()
             lvl = min(len(m.group(1)), 3)
-            out.append(f"<h{lvl}>{inline(m.group(2))}</h{lvl}>")
+            if headings is not None:
+                h_count[0] += 1
+                hid = f"{id_prefix}h{h_count[0]:03d}"
+                headings.append((lvl, hid, m.group(2).strip()))
+                out.append(f'<h{lvl} id="{hid}">{inline(m.group(2))}</h{lvl}>')
+            else:
+                out.append(f"<h{lvl}>{inline(m.group(2))}</h{lvl}>")
             continue
         m = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)$", line.strip())
         if m:
@@ -254,14 +269,21 @@ def main():
         print("FAIL: images/cover.jpg がない（--no-cover で動作確認は可能）")
         return 1
 
-    # 章XHTML
-    chapters = []  # (id, title, xhtml)
+    # 章XHTML（見出しを収集して目次のジャンプ先にする）
+    chapters = []  # (id, title, xhtml, headings)
     for i, d in enumerate(drafts):
         md = d.read_text(encoding="utf-8")
         m = re.search(r"^#{1,2}\s+(.+)$", md, re.M)
         title = m.group(1).strip() if m else d.stem
-        chapters.append((f"c{i:02d}", title, md_to_xhtml(md)))
-    chapters.append(("back", "おわりに・奥付", back_matter_xhtml(meta, owarini_md)))
+        hs = []
+        body = md_to_xhtml(md, headings=hs, id_prefix=f"c{i:02d}-")
+        chapters.append((f"c{i:02d}", title, body, hs))
+    chapters.append(("back", "おわりに・奥付", back_matter_xhtml(meta, owarini_md), []))
+
+    def sub_entries(hs):
+        """目次に載せる小見出し＝台本（D01〜）のみ。"""
+        return [(hid, txt) for lvl, hid, txt in hs
+                if lvl == 3 and re.match(r"D\d+", txt)]
 
     # EPUB 組み立て
     out_dir = ROOT / "output"
@@ -278,7 +300,9 @@ def main():
         manifest.append('<item id="cover-img" href="images/cover.jpg" media-type="image/jpeg" properties="cover-image"/>')
         manifest.append('<item id="coverpage" href="cover.xhtml" media-type="application/xhtml+xml"/>')
         spine.append('<itemref idref="coverpage"/>')
-    for cid, _, _ in chapters:
+    manifest.append('<item id="tocpage" href="toc.xhtml" media-type="application/xhtml+xml"/>')
+    spine.append('<itemref idref="tocpage"/>')
+    for cid, _, _, _ in chapters:
         manifest.append(f'<item id="{cid}" href="{cid}.xhtml" media-type="application/xhtml+xml"/>')
         spine.append(f'<itemref idref="{cid}"/>')
     for img in images:
@@ -303,12 +327,29 @@ def main():
 </spine>
 </package>
 """
-    nav_items = "\n".join(
-        f'<li><a href="{cid}.xhtml">{html.escape(t)}</a></li>' for cid, t, _ in chapters)
+    def toc_lists(link_fmt):
+        items = []
+        for cid, ttl, _, hs in chapters:
+            subs = sub_entries(hs)
+            li = f'<li><a href="{link_fmt(cid, None)}">{html.escape(ttl)}</a>'
+            if subs:
+                li += "\n<ol>\n" + "\n".join(
+                    f'<li><a href="{link_fmt(cid, hid)}">{html.escape(txt)}</a></li>'
+                    for hid, txt in subs) + "\n</ol>\n"
+            items.append(li + "</li>")
+        return "\n".join(items)
+
+    link = lambda cid, hid: f"{cid}.xhtml" + (f"#{hid}" if hid else "")
     nav = xhtml_doc("目次", f"""<nav epub:type="toc" id="toc"><h1>目次</h1>
 <ol>
-{nav_items}
+{toc_lists(link)}
 </ol></nav>""")
+    toc_page = xhtml_doc("目次", f"""<h1>目次</h1>
+<div class="toc">
+<ol>
+{toc_lists(link)}
+</ol>
+</div>""")
 
     with zipfile.ZipFile(epub_path, "w") as z:
         z.writestr("mimetype", "application/epub+zip", zipfile.ZIP_STORED)
@@ -318,6 +359,7 @@ def main():
 </container>""", zipfile.ZIP_DEFLATED)
         z.writestr("OEBPS/content.opf", opf, zipfile.ZIP_DEFLATED)
         z.writestr("OEBPS/nav.xhtml", nav, zipfile.ZIP_DEFLATED)
+        z.writestr("OEBPS/toc.xhtml", toc_page, zipfile.ZIP_DEFLATED)
         z.writestr("OEBPS/style.css", CSS, zipfile.ZIP_DEFLATED)
         if cover:
             z.write(cover, "OEBPS/images/cover.jpg", zipfile.ZIP_DEFLATED)
@@ -325,7 +367,7 @@ def main():
                 meta["title"],
                 '<p class="noindent"><img src="images/cover.jpg" alt="表紙"/></p>'),
                 zipfile.ZIP_DEFLATED)
-        for cid, title, body in chapters:
+        for cid, title, body, _ in chapters:
             z.writestr(f"OEBPS/{cid}.xhtml", xhtml_doc(title, body), zipfile.ZIP_DEFLATED)
         for img in images:
             z.write(img, f"OEBPS/images/{img.name}", zipfile.ZIP_DEFLATED)
