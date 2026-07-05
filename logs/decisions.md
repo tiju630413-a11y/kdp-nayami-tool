@@ -163,3 +163,10 @@ book.json の publish_date に 2026-07-15 を設定（奥付発行日・登録�
 無名スタートのため、発売前に公開する「書籍リンクなし・完結型」の下積みnote記事を
 2本用意（note_pre_1/2）。発売後に既存記事へAmazonリンクを追記する運用。
 公開順: 下積み①（即）→②（7/8頃）→ note_1切り出し（7/15）→ note_2後記（7/18頃）。
+
+### D-26: 発売URL反映・DB登録（2026-07-05）
+Amazon短縮URL https://amzn.asia/d/0gjP2UQa を book.json(amazon_url)に登録。
+全販促ファイル（note_1/2・note_pre_1/2・x_posts・sns_strategy）のリンク
+プレースホルダを実URLへ差込、下積み2本にも書籍リンクのフッターを追加。
+import_kdp register で performance.db に書籍登録（売上・レビュー追跡開始）。
+launch_checklist.md を運用者向けに作成。
