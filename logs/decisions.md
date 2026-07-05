@@ -146,3 +146,14 @@ X を Tiju003（https://x.com/Tiju003）で新設。settings.yaml の x_account�
 book.json の x_url に登録。巻末の「note のご案内」を「著者の発信」に統合し、
 note・X を1ブロックで並列表示（未設定URLは行ごと自動省略）。
 build_epub・templates/back_matter を同構造に更新。以後の全冊に自動適用。
+
+### D-24: KDP登録シートの全項目化・魅力的な内容説明・無名SNS戦略（2026-07-05 著者指示）
+添付の姉妹書シートに合わせ、kdp_sheet.py をプログラム生成に作り替え、
+フリガナ・ローマ字・英題・版数・著者読み・AI開示詳細・キーワード根拠・
+カテゴリ日英3・価格根拠・ファイル一式・品質ゲート転記を全て出力。
+book.json/kdp_meta.json に書誌メタを追加（フィールド定義は templates/kdp_sheet.md）。
+内容説明は「フック→痛み→反転→◆ベネフィット→こんな方へ→本書について」の
+HTML付き広告文に刷新（style_check PASS）。
+著者読みは著者ブランド（Tiju）に合わせ チジュ／Tiju で統一しシートに⚠確認注記。
+SNS戦略は無名前提（共感で拡散・価値で信頼）で sns_strategy.md を新設、
+X投稿12本（全140字以内・NG無し）を用意。08_promo に恒久ルールとして追記。

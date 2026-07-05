@@ -1,72 +1,43 @@
-# KDP 登録シート（templates/kdp_sheet.md）
+# KDP 登録シート ── 必要フィールド定義（templates/kdp_sheet.md）
 
-scripts/kdp_sheet.py が books/NNN/plan.md・promo/ から値を差し込んで
-output/NNN_kdp_sheet.md を生成する。KDP管理画面にこの順で転記すれば登録が終わる。
+scripts/kdp_sheet.py が book.json / kdp_meta.json / promo/description.md / 実測値から
+`output/NNN_kdp_sheet.md`（全項目版）を生成する。生成物はKDPの各入力欄に転記できる。
+このファイルは「各データファイルに何を用意すべきか」の定義。
 
----
+## books/NNN/book.json に必要なフィールド
 
-## 基本情報
+| キー | 例 | 用途 |
+|---|---|---|
+| title / subtitle | 職場の理不尽から自分を守る台本36 / 言い返せなくていい… | ②③ |
+| title_kana / subtitle_kana | ショクバノリフジン… | KDPフリガナ欄（必須） |
+| title_romaji / subtitle_romaji | Shokuba no rifujin… | Author Central 参考 |
+| title_en | 36 Scripts to… | 英題（任意） |
+| series_name / series_number | 今夜の処方箋 / 1 | ④（空なら単独タイトル扱い） |
+| edition | 1 | ⑤版数 |
+| author | 智珠 | ⑥（姓欄に入れ名欄は空） |
+| author_kana / author_romaji | チジュ / Tiju | ⑥フリガナ・ローマ字（著者ブランドと統一） |
+| copyright_romaji | Tiju | 奥付©（build_epub が使用） |
+| note_url / x_url | https://note.com/tiju630413 / https://x.com/Tiju003 | 巻末SNS導線・シート |
+| adult_content / age_rating / drm | いいえ / 一般 / なし | ⑪⑫ |
+| publish_date | 空可（出版日にKDP付与） | 奥付・日付 |
 
-| 項目 | 値 |
-|---|---|
-| タイトル | {{title}} |
-| サブタイトル | {{subtitle}} |
-| シリーズ名（KDPシリーズ登録） | {{series_name}} |
-| シリーズ番号 | {{series_number}} |
-| 著者名 | 智珠 |
-| 言語 | 日本語 |
+## books/NNN/kdp_meta.json に必要なフィールド
 
-## 紹介文（そのまま貼り付け）
+- `keywords`: 7個（タイトル・サブ語と重複させない）
+- `keywords_rationale`: 選定根拠（1文）
+- `categories`: 最大3個。各 `{"jp": "...", "en": "..."}`
+- `categories_note`: 申請制注意など
 
-{{description}}
+## promo/description.md
 
-## キーワード（7個）
+KDPの内容紹介そのもの（最大約4,000字・`<br><b><i>` 可）。
+templates/description.md の型に従い、冒頭フック→痛み→反転→◆ベネフィット5〜6→
+【こんな方へ】→【本書について】。固有の武器（台本数・命名FW・二の手）を数字と名前で。
 
-| # | キーワード |
-|---|---|
-| 1 | {{keyword_1}} |
-| 2 | {{keyword_2}} |
-| 3 | {{keyword_3}} |
-| 4 | {{keyword_4}} |
-| 5 | {{keyword_5}} |
-| 6 | {{keyword_6}} |
-| 7 | {{keyword_7}} |
+## 生成と再生成
 
-## カテゴリ（2個）
-
-| # | カテゴリ |
-|---|---|
-| 1 | {{category_1}} |
-| 2 | {{category_2}} |
-
-## 価格・配信
-
-| 項目 | 値 |
-|---|---|
-| 価格 | {{price_yen}}円 |
-| KDPセレクト | 加入する |
-| DRM | なし |
-| 原稿ファイル | {{epub_file}} |
-| 表紙ファイル | {{cover_file}} |
-
-## AI生成コンテンツ申告（必須・「あり」以外で登録しない）
-
-| 項目 | 申告 |
-|---|---|
-| テキスト: AIツールで生成しましたか | **あり**（AIツールで生成し、大幅な編集を加えた） |
-| 画像: AIツールで生成しましたか | **あり**（AIツールで生成し、大幅な編集を加えた） |
-
-## 出版前 最終チェック（品質ゲート §8 の転記。全て YES になるまで登録しない）
-
-- [ ] 総字数 40,000 字以上（style_check PASS）
-- [ ] review_loop 収束（重大指摘ゼロ・{{review_loops}}周で収束）
-- [ ] AI代替判定 合格（baseline.md 比較済み）
-- [ ] 著者資産 {{assets_used}} 件採用（最低 {{min_author_assets}} 件）
-- [ ] style_check 全項目 PASS
-- [ ] 医療・法律・金銭の断定なし＋専門家誘導定型 挿入済み
-- [ ] AI生成申告 = テキスト/画像とも「あり」
-- [ ] 巻末に奥付・著作権表記あり
-- [ ] 表紙: シリーズ視覚言語準拠＋スマホ縮小視認テスト OK
-- [ ] EPUBサイズ {{epub_size_mb}} MB（3MB以下目安）
-- [ ] 今週の出版数が pace_per_week（{{pace_per_week}}冊）以内・KDP週10上限以内
-- [ ] 人間の通読 1回 完了（修正が出た場合: 資産側への還流 済 / 内容: {{feedback_note}}）
+```
+python3 scripts/kdp_sheet.py NNN
+```
+不足フィールドは上記2ファイルに追記して再実行。AI開示・価格帯・カテゴリはKDP仕様変更が
+あるため、生成物冒頭の注意書きどおり登録時に最新の公式ガイドを確認する。
