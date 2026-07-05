@@ -177,11 +177,17 @@ def back_matter_xhtml(meta, owarini_md):
         parts.append(md_to_xhtml(
             f"今後も「{meta['series_name']}」シリーズとして、"
             "夜にひとりで抱えてしまう悩みに向けた一冊を、順に出していきます。\n"))
-    if meta.get("note_url"):  # アカウント未確定の間は導線を省略（仕様§12）
-        parts.append(md_to_xhtml(
-            "## note のご案内\n\n"
-            "本に書ききれなかった話や、日々の観察は note に書いています。\n\n"
-            f"「{meta['author']}」で検索するか、こちらへ: {meta['note_url']}\n"))
+    # SNS導線（未確定のアカウントは行ごと省略。仕様§12）
+    sns_lines = []
+    if meta.get("note_url"):
+        sns_lines.append(f"note（本に書ききれない話や日々の観察）: {meta['note_url']}")
+    if meta.get("x_url"):
+        sns_lines.append(f"X（旧Twitter）: {meta['x_url']}")
+    if sns_lines:
+        body = ("## 著者の発信\n\n"
+                f"「{meta['author']}」の発信は、こちらでご覧いただけます。\n\n"
+                + "\n\n".join(sns_lines) + "\n")
+        parts.append(md_to_xhtml(body))
     parts.append(f"""<div class="colophon"><hr/>
 <p><strong>{html.escape(meta['title'])}</strong><br/>{html.escape(meta.get('subtitle',''))}</p>
 <p>{html.escape(pd)}　初版発行</p>

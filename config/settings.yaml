@@ -15,7 +15,7 @@ pen_name: 智珠
 # note_url が空の間は、巻末のnote導線ブロックを自動で省略する
 note_account: tiju630413
 note_url: "https://note.com/tiju630413"
-x_account: ""                 # 新設予定・未定（promo のX投稿はID非依存の文面）
+x_account: "Tiju003"          # https://x.com/Tiju003
 
 # EPUB ビルド
 epub:

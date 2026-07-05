@@ -140,3 +140,9 @@ book.json に反映し、巻末のnote導線が復活（EPUBで実在確認）�
 著作権表記を Chiju→Tiju に変更。ローマ字はコードに埋めず book.json の
 copyright_romaji で持ち（既定 Tiju）、テンプレートも {{copyright_romaji}} に。
 これで表記ゆれ・変更が data 側で完結する（仕様§2-1 に準拠）。
+
+### D-23: Xアカウント登録・巻末SNS導線の統合（2026-07-05 著者指示）
+X を Tiju003（https://x.com/Tiju003）で新設。settings.yaml の x_account、
+book.json の x_url に登録。巻末の「note のご案内」を「著者の発信」に統合し、
+note・X を1ブロックで並列表示（未設定URLは行ごと自動省略）。
+build_epub・templates/back_matter を同構造に更新。以後の全冊に自動適用。
