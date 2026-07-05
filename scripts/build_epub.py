@@ -185,7 +185,7 @@ def back_matter_xhtml(meta, owarini_md):
     parts.append(f"""<div class="colophon"><hr/>
 <p><strong>{html.escape(meta['title'])}</strong><br/>{html.escape(meta.get('subtitle',''))}</p>
 <p>{html.escape(pd)}　初版発行</p>
-<p>著者　{html.escape(meta['author'])}<br/>© {year} Chiju</p>
+<p>著者　{html.escape(meta['author'])}<br/>© {year} {html.escape(meta.get('copyright_romaji', 'Tiju'))}</p>
 <p>本書の内容の一部または全部を、著作権者の許可なく複製・転載・翻案・データ化および機械学習の目的で利用することを禁じます。</p>
 <p>本書は情報の提供を目的としたものであり、医療・法律・金銭に関する個別の助言に代わるものではありません。具体的な判断にあたっては、専門家にご相談ください。</p>
 </div>""")

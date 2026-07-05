@@ -50,7 +50,7 @@ build 工程が本文末尾に結合する。順序は固定:
 {{publish_date}}　初版発行
 
 著者　智珠
-© {{publish_year}} Chiju
+© {{publish_year}} {{copyright_romaji}}
 
 本書の内容の一部または全部を、著作権者の許可なく複製・転載・翻案・
 データ化および機械学習の目的で利用することを禁じます。

@@ -13,8 +13,8 @@ pen_name: 智珠
 
 # 発信アカウント（仕様§12: 唯一の出所。新設・変更時はここを書き換えて build 再実行）
 # note_url が空の間は、巻末のnote導線ブロックを自動で省略する
-note_account: ""              # 新設予定・未定（決まったらここを設定）
-note_url: ""
+note_account: tiju630413
+note_url: "https://note.com/tiju630413"
 x_account: ""                 # 新設予定・未定（promo のX投稿はID非依存の文面）
 
 # EPUB ビルド

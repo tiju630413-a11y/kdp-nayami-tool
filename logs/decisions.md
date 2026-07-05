@@ -133,3 +133,10 @@ note・Xは新設予定のため、URL・IDの出所を settings.yaml と book.j
 アンカーでジャンプ可能（リーダーメニュー用のnavも同じ入れ子構造に強化）。
 台本集は拾い読みが主用途のため、小見出しは台本（D01〜D36）のみ載せ、
 節見出しは載せない（目次の一覧性を守る）。以後の全冊に自動適用。
+
+### D-22: note新設アカウント反映・著作権表記のローマ字化（2026-07-05 著者指示）
+noteを tiju630413（https://note.com/tiju630413）で新設。settings.yaml・
+book.json に反映し、巻末のnote導線が復活（EPUBで実在確認）。
+著作権表記を Chiju→Tiju に変更。ローマ字はコードに埋めず book.json の
+copyright_romaji で持ち（既定 Tiju）、テンプレートも {{copyright_romaji}} に。
+これで表記ゆれ・変更が data 側で完結する（仕様§2-1 に準拠）。
