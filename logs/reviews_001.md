@@ -1,2 +1,3 @@
 - 2026-07-05 round1: SEVERE合計 18
 - 2026-07-05 round2: SEVERE合計 5
+- 2026-07-05 round3: SEVERE合計 1
