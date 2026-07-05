@@ -47,6 +47,10 @@ p.noindent { text-indent: 0; }
 blockquote { margin: 1em 1.5em; padding-left: 0.8em; border-left: 2px solid #999; }
 ul, ol { margin: 1em 0; padding-left: 2em; }
 img { max-width: 100%; }
+table { border-collapse: collapse; width: 100%; margin: 1.5em 0; font-size: 0.82em; line-height: 1.6; }
+th, td { border: 1px solid #bbb; padding: 0.4em 0.5em; text-align: left; vertical-align: top; text-indent: 0; }
+th { background: #1F3A5F; color: #fff; font-weight: bold; }
+tbody tr:nth-child(even) { background: #f2f4f7; }
 .toc ol { list-style: none; padding-left: 0; margin: 1em 0; }
 .toc ol ol { padding-left: 1.2em; font-size: 0.9em; margin: 0.4em 0 1em; }
 .toc li { margin: 0.5em 0; }
@@ -84,8 +88,37 @@ def md_to_xhtml(md_text, chapter_title=None, headings=None, id_prefix=""):
         s = re.sub(r"\*(.+?)\*", r"<em>\1</em>", s)
         return s
 
-    for line in md_text.splitlines():
-        line = line.rstrip()
+    def split_row(row):
+        cells = row.strip().strip("|").split("|")
+        return [c.strip() for c in cells]
+
+    def is_sep(row):
+        return bool(re.match(r"^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$", row))
+
+    lines = md_text.splitlines()
+    idx = 0
+    while idx < len(lines):
+        line = lines[idx].rstrip()
+        # 表（パイプ記法）: ヘッダ行の直後が区切り行なら表として組む
+        if line.strip().startswith("|") and idx + 1 < len(lines) and is_sep(lines[idx + 1]):
+            close_list(); close_quote()
+            header = split_row(line)
+            idx += 2
+            body = []
+            while idx < len(lines) and lines[idx].strip().startswith("|"):
+                body.append(split_row(lines[idx]))
+                idx += 1
+            out.append("<table>")
+            out.append("<thead><tr>" +
+                       "".join(f"<th>{inline(c)}</th>" for c in header) +
+                       "</tr></thead>")
+            out.append("<tbody>")
+            for r in body:
+                r = (r + [""] * len(header))[:len(header)]
+                out.append("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>")
+            out.append("</tbody></table>")
+            continue
+        idx += 1
         m = re.match(r"^(#{1,3})\s+(.*)$", line)
         if m:
             close_list(); close_quote()
