@@ -158,6 +158,10 @@ def back_matter_xhtml(meta, owarini_md):
             f"本書とあわせて読んでいただきたいのが、こちらです。\n\n"
             f"**『{meta['next_book_title']}』**（{meta['author']}）\n\n"
             f"{meta.get('next_book_pain_line','')}——そんなあなたに向けて書きました。\n"))
+    elif meta.get("series_name"):  # 1冊目: 既刊がない間はシリーズ予告1行（templates/back_matter.md）
+        parts.append(md_to_xhtml(
+            f"今後も「{meta['series_name']}」シリーズとして、"
+            "夜にひとりで抱えてしまう悩みに向けた一冊を、順に出していきます。\n"))
     if meta.get("note_url"):  # アカウント未確定の間は導線を省略（仕様§12）
         parts.append(md_to_xhtml(
             "## note のご案内\n\n"
