@@ -94,7 +94,10 @@ def main():
         note = km.get("categories_note", "")
         return "\n".join(out) + (f"\n\n> {note}" if note else "")
 
-    pd = m.get("publish_date") or "（出版日にKDPが付与）"
+    pd = m.get("publish_date") or "（未設定：KDP登録時に発売日を指定。空欄なら即時配信）"
+    # 実装装置（台本/守りの一言の本数）と図解点数はデータから導く（書籍ごとに異なる）
+    deliverables = km.get("deliverables") or m.get("deliverables") or "台本"
+    n_fig = len(list((book / "images").glob("ch*.jpg")))
     L = []
     A = L.append
     A(f"# KDP 登録情報シート ── 『{m['title']}』")
@@ -187,19 +190,20 @@ def main():
     A(m.get("age_rating", "一般（全年齢向け）。年齢指定なしで可。"))
     A("")
     A("## ⑫ その他")
+    A(f"- **発売日（KDPの「予約注文」または即時配信で指定）**：{pd}")
     A(f"- **成人向けコンテンツ**：{m.get('adult_content','いいえ')}")
     A("- **ISBN**：不要（Kindle版はASINが自動付与）。")
     A(f"- **DRM**：{m.get('drm','任意（後から変更不可）')}")
     A("- **KDPセレクト（独占90日／Kindle Unlimited対象）**：加入する"
       "（実用書はKENPが伸びやすくKUと好相性）。")
     A(f"- **価格**：本体 **¥{price}**。{royalty_note(price)}"
-      f" 本文実質 約{chars:,}字＋台本36本・比較図。発売記念で一時¥300も可。")
+      f" 本文実質 約{chars:,}字＋{deliverables}・図解{n_fig}点。発売記念で一時¥300も可。")
     A("- ※価格帯・印税率・カテゴリ選択・AI開示はKDP仕様変更あり。登録時に最新の公式ガイドを確認。")
     A("")
     A("## ファイル一式")
     A(f"- 本文EPUB：`{epub.name if epub else '未ビルド'}`（約{epub_mb}MB）")
     A("  - 横書き・リフロー型／表紙埋め込み済み／目次ジャンプ可（nav＋toc.xhtmlの二系統）")
-    A(f"  - 構成：表紙→目次→はじめに→第1〜終章→おわりに・奥付。台本36本・章別図解8点。")
+    A(f"  - 構成：表紙→目次→はじめに→第1〜終章→おわりに・奥付。{deliverables}・章別図解{n_fig}点。")
     A("  - 巻末：レビュー依頼（純粋なお願い）・著者の発信（note/X）・奥付（©・機械学習利用禁止文）")
     A("- 表紙画像（単体アップ用）：`books/{}/images/cover.jpg`（1600×2560）".format(book.name))
     A("")
