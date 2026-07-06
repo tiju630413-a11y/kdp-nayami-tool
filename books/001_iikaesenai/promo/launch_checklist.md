@@ -1,13 +1,14 @@
 # 発売運用チェックリスト（今夜の処方箋・2冊同時創刊 / 発売 2026-07-15）
 
-- 01『職場の理不尽から自分を守る台本36』 Amazon: https://amzn.asia/d/0gjP2UQa
-- 02『苦手な上司の取扱説明書』 Amazon: （申請後にリンク発行→各promoファイルへ差込）
+- 01『職場の理不尽から自分を守る台本36』 Amazon: https://amzn.asia/d/0gjP2UQa （ASIN B0H7PNJ1Z5）
+- 02『苦手な上司の取扱説明書』 Amazon: https://amzn.asia/d/03IxRS1N （ASIN B0H7QFSNCK）
 
 戦略の全体像・投稿カレンダーは sns_strategy.md が正。入口は01に絞り、02は「あの上司にだけ効かないなら」で橋渡し。
 
 ## 今すぐ〜発売まで
-- [x] 02をKDP申請（7/15発売指定）→ ★ASIN・Amazonリンクの発行待ち
-- [ ] 02リンクを差込: 02 description / 02 note_1・note_2 / 02 x_posts発売6 / 01 note_1・note_2の相互リンク / sns_strategy（リンク発行後にまとめて）
+- [x] 02をKDP申請（7/15発売指定）→ ASIN B0H7QFSNCK・リンク発行済み
+- [x] 02リンクを差込: 02 note_1・note_2 / 02 x_posts発売6 / 01 note_1・note_2の相互リンク（全5か所差込済み・book.json amazon_url/asin登録済み）
+- [x] performance.db に02を登録（売上・レビュー追跡開始）
 - [ ] X(@Tiju003) プロフィール・bio・**創刊告知を固定ポスト**に設定（sns_strategy.md）
 - [ ] note(tiju630413) プロフィール設定
 - [ ] note下積み①(note_pre_1)公開 → ②(note_pre_2)を7/8頃
@@ -31,4 +32,4 @@
 
 ## 全リンク差込状況
 - 01: description / note_1 / note_2 / note_pre_1 / note_pre_2 / x_posts / sns_strategy … Amazonリンク差込済み
-- 02: description / note_1 / note_2 / x_posts … 02のAmazonリンクは**発行待ち**（01への相互リンクは差込済み）
+- 02: note_1 / note_2 / x_posts発売6 … **差込済み**（01への相互リンクも差込済み・book.jsonにamazon_url/asin登録済み）

@@ -232,3 +232,11 @@ font-size 0.82em で5列でも折返し可）。2冊目EPUBを再ビルドし早
 ・⑫に「発売日」行を追加（book.json publish_date を出力、空なら即時配信の注記）
 ・埋込説明が旧版だった（同時発売リフレーム前に生成）ため両シート再生成で最新化。
 01/02のシートを再生成し、発売日2026-07-15・正しい本数/図解点数・02は同時創刊の説明に更新。
+
+### D-32: 02発売URL反映・DB登録（2026-07-05）
+02が7/15発売で公開。Amazon短縮URL https://amzn.asia/d/03IxRS1N ／ ASIN B0H7QFSNCK。
+book.json(002) に amazon_url・asin を登録。プレースホルダ5か所へ実URLを差込:
+02 note_1/note_2 の自著リンク・02 x_posts発売6・01 note_1/note_2 の相互リンク。
+x_posts運用メモと launch_checklist を発行済みに更新（01/02 両ASIN併記）。
+import_kdp register 002 で performance.db に登録（書籍2件・ASIN確定済み、売上/レビュー追跡開始）。
+これで2冊同時創刊の販促物リンクはすべて実URLで連結完了。
