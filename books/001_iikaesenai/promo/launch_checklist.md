@@ -6,8 +6,8 @@
 戦略の全体像・投稿カレンダーは sns_strategy.md が正。入口は01に絞り、02は「あの上司にだけ効かないなら」で橋渡し。
 
 ## 今すぐ〜発売まで
-- [ ] 02をKDP申請（7/15発売指定）→ ASIN・Amazonリンクを取得
-- [ ] 02リンクを差込: 02 description / 02 note_1・note_2 / 02 x_posts発売6 / 01 note_1・note_2の相互リンク / sns_strategy
+- [x] 02をKDP申請（7/15発売指定）→ ★ASIN・Amazonリンクの発行待ち
+- [ ] 02リンクを差込: 02 description / 02 note_1・note_2 / 02 x_posts発売6 / 01 note_1・note_2の相互リンク / sns_strategy（リンク発行後にまとめて）
 - [ ] X(@Tiju003) プロフィール・bio・**創刊告知を固定ポスト**に設定（sns_strategy.md）
 - [ ] note(tiju630413) プロフィール設定
 - [ ] note下積み①(note_pre_1)公開 → ②(note_pre_2)を7/8頃
