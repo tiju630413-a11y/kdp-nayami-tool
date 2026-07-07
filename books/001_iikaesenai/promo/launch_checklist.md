@@ -1,6 +1,6 @@
 # 発売運用チェックリスト（今夜の処方箋・2冊同時創刊 / 発売 2026-07-15）
 
-- 01『職場の理不尽から自分を守る台本36』 Amazon: https://amzn.asia/d/0gjP2UQa （ASIN B0H7PNJ1Z5）
+- 01『職場の理不尽から自分を守る台本50』 Amazon: https://amzn.asia/d/0gjP2UQa （ASIN B0H7PNJ1Z5）
 - 02『苦手な上司の取扱説明書』 Amazon: https://amzn.asia/d/03IxRS1N （ASIN B0H7QFSNCK）
 
 戦略の全体像・投稿カレンダーは sns_strategy.md が正。入口は01に絞り、02は「あの上司にだけ効かないなら」で橋渡し。
