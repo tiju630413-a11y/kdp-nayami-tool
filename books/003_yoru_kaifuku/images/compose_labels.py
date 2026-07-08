@@ -49,7 +49,32 @@ def arrow_h(d, x0, x1, y, color=NAVY, w=7):
     d.polygon([(x1, y), (x1 - 18, y - 11), (x1 - 18, y + 11)], fill=color)
 
 
-# ---------------- 表紙 ----------------
+# ---------------- 表紙（Gemini下地に文字帯を重ねる／本命） ----------------
+def compose_cover_over_base(src, out):
+    """Geminiの文字なし下地（src/cover_main.png等）に、タイトル帯を後入れ合成。
+    01/02と同じ帯構成（上=シリーズ／下=タイトル）。"""
+    img = Image.open(src).convert("RGB")
+    img = img.resize((1600, round(img.height * 1600 / img.width)), Image.LANCZOS)
+    if img.height < 2560:
+        img = img.resize((1600, 2560), Image.LANCZOS)
+    else:
+        top = (img.height - 2560) // 2
+        img = img.crop((0, top, 1600, top + 2560))
+    d = ImageDraw.Draw(img, "RGBA")
+    W, H = 1600, 2560
+    d.rectangle([0, 0, W, 250], fill=NAVY + (235,))
+    text(d, (W // 2, 130), "今夜の処方箋　03", 74, WHITE, bold=1)
+    d.rectangle([0, 1900, W, H], fill=(10, 16, 28, 232))
+    multiline(d, (W // 2, 2110),
+              ["言い返せなかった夜の、", "心の片づけ方"], 126, WHITE, bold=2, gap=1.24)
+    multiline(d, (W // 2, 2360),
+              ["反芻して眠れない夜を、", "そっと手放すために"],
+              50, (206, 216, 232), gap=1.3)
+    text(d, (W - 80, 2495), "智珠", 52, WHITE, anchor="rm", bold=1)
+    img.convert("RGB").save(out, "JPEG", quality=88, optimize=True)
+
+
+# ---------------- 表紙（純Pillowのフォールバック） ----------------
 def cover(out):
     W, H = 1600, 2560
     img = Image.new("RGB", (W, H), (14, 20, 34))
@@ -244,6 +269,20 @@ GEN = {
 }
 
 if __name__ == "__main__":
+    # 表紙: Geminiの下地があればそれに文字を重ね、なければ純Pillowで生成
+    base = None
+    for cand in ("cover_main.png", "cover_spare.png"):
+        if (HERE / "src" / cand).exists():
+            base = HERE / "src" / cand
+            break
+    if base:
+        compose_cover_over_base(base, HERE / "cover.jpg")
+        print(f"OK: cover.jpg（Gemini下地 {base.name} に合成）")
+    else:
+        cover(HERE / "cover.jpg")
+        print("OK: cover.jpg（純Pillow・下地なし）")
     for name, fn in GEN.items():
+        if name == "cover.jpg":
+            continue
         fn(HERE / name)
         print(f"OK: {name}")
