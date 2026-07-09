@@ -203,7 +203,74 @@ def ch05(out):
     img.save(out, "JPEG", quality=84, optimize=True)
 
 
-GEN = {"ch01.jpg": ch01, "ch03.jpg": ch03, "ch04.jpg": ch04, "ch05.jpg": ch05}
+# ---------------- ch02 同僚への守り ----------------
+def ch02(out):
+    W, H = 1200, 700
+    img = Image.new("RGB", (W, H), PAPER)
+    d = ImageDraw.Draw(img)
+    text(d, (W * .5, 58), "同僚——対等だから、正面から線を引く", 40, NAVY, bold=1)
+    cards = [
+        ("押し付け", "そらさず、等分へ戻す", "「ここからは各自のぶんで」"),
+        ("手柄の横取り", "事前に、事実を記録で守る", "工程で切り分け＋送信済みメール"),
+        ("陰口・詮索・NO", "加担せず、NOを普通の返事に", "「私はやめとくね」を軽く"),
+    ]
+    x0 = 70
+    for i, (t, how, ex) in enumerate(cards):
+        x = x0 + i * 375
+        rbox(d, [x, 150, x + 340, 500], WHITE, outline=LEAF, width=3)
+        rbox(d, [x, 150, x + 340, 222], LEAF, radius=18)
+        text(d, (x + 170, 186), t, 28, WHITE, bold=1)
+        multiline(d, (x + 170, 300), [how], 25, NAVY, bold=1)
+        multiline(d, (x + 170, 400), _wrap2(ex), 22, INK, gap=1.25)
+    rbox(d, [140, 540, 1060, 640], NAVY, radius=14)
+    multiline(d, (W * .5, 590),
+              ["毎日続く関係だから、焦土戦にしない。", "線は引く。ただし、勝ち負けにはしない。"],
+              25, WHITE, bold=1, gap=1.3)
+    img.save(out, "JPEG", quality=84, optimize=True)
+
+
+def _wrap2(s):
+    if len(s) <= 12:
+        return [s]
+    p = s.find("＋")
+    if p > 0:
+        return [s[:p + 1], s[p + 1:]]
+    return [s[:len(s) // 2], s[len(s) // 2:]]
+
+
+# ---------------- ch08 終章 勾配で守りを切り替える ----------------
+def ch08(out):
+    W, H = 1200, 740
+    img = Image.new("RGB", (W, H), PAPER)
+    d = ImageDraw.Draw(img)
+    text(d, (W * .5, 58), "勾配で、守りを切り替える一枚", 42, NAVY, bold=1)
+    # 中央の問い
+    rbox(d, [390, 140, 810, 232], NAVY, radius=16)
+    multiline(d, (600, 186), ["この相手は、私の評価を", "握っている？"], 27, WHITE, bold=1)
+    # 分岐
+    d.line([(600, 232), (600, 270)], fill=NAVY, width=6)
+    d.line([(300, 270), (900, 270)], fill=NAVY, width=6)
+    arrow_down(d, 300, 270, 330, color=DUSK)
+    arrow_down(d, 900, 270, 330, color=LEAF)
+    # 縦
+    rbox(d, [110, 335, 500, 560], WHITE, outline=DUSK, width=3)
+    text(d, (305, 385), "はい＝縦（上司）", 30, DUSK, bold=1)
+    multiline(d, (305, 470),
+              ["受け流す", "急所を踏まず、時間を持ち帰る"], 24, INK, gap=1.4)
+    # 横
+    rbox(d, [700, 335, 1090, 560], WHITE, outline=LEAF, width=3)
+    text(d, (895, 385), "いいえ＝横（それ以外）", 27, LEAF, bold=1)
+    multiline(d, (895, 470),
+              ["線を引く", "対等を根拠に、正面から一本"], 24, INK, gap=1.4)
+    rbox(d, [140, 600, 1060, 700], NAVY, radius=14)
+    multiline(d, (W * .5, 650),
+              ["明日へ渡す1枚＝①縦か横か　②握られているのは何か", "③今日引く線を、一本"],
+              25, WHITE, bold=1, gap=1.3)
+    img.save(out, "JPEG", quality=84, optimize=True)
+
+
+GEN = {"ch01.jpg": ch01, "ch02.jpg": ch02, "ch03.jpg": ch03,
+       "ch04.jpg": ch04, "ch05.jpg": ch05, "ch08.jpg": ch08}
 
 if __name__ == "__main__":
     base = None
