@@ -66,7 +66,7 @@ def compose_cover_over_base(src, out):
     d.rectangle([0, 0, W, 250], fill=NAVY + (235,))
     text(d, (W // 2, 130), "今夜の処方箋　05", 74, WHITE, bold=1)
     d.rectangle([0, 1900, W, H], fill=(10, 16, 28, 232))
-    multiline(d, (W // 2, 2100), ["職場の、", "降り方"], 168, WHITE, bold=2, gap=1.2)
+    multiline(d, (W // 2, 2100), ["職場の", "降り方"], 168, WHITE, bold=2, gap=1.2)
     multiline(d, (W // 2, 2380),
               ["逃げるは負けじゃない", "——削られる前に、自分を守って降りる"],
               44, (206, 216, 232), gap=1.35)
@@ -94,7 +94,7 @@ def cover(out):
     d.line([(180, 1470), (1400, 1470)], fill=(70, 90, 130, 255), width=5)
     text(d, (W // 2, 1600), "その扉から、出ていっていい", 44, (206, 216, 232), bold=1)
     d.rectangle([0, 1850, W, H], fill=(10, 16, 28, 236))
-    multiline(d, (W // 2, 2050), ["職場の、", "降り方"], 168, WHITE, bold=2, gap=1.2)
+    multiline(d, (W // 2, 2050), ["職場の", "降り方"], 168, WHITE, bold=2, gap=1.2)
     multiline(d, (W // 2, 2340),
               ["逃げるは負けじゃない", "——削られる前に、自分を守って降りる"],
               44, (206, 216, 232), gap=1.35)
