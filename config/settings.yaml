@@ -24,6 +24,13 @@ epub:
   image_quality: 80         # JPEG再圧縮品質
   cover_max_width: 1600     # 表紙の最大幅（KDP推奨 1600x2560）
 
+# 日本語品質（三軸の基準は japanese_quality_prompt.md が唯一の参照元。ここは切替スイッチのみ）
+# ジャンル別の漢字上限を切り替える。各書籍の book.json の任意フィールド genre で選択
+# （未指定＝実用書）。実用書は準2級を厳守、小説は2級まで可。
+japanese_quality:
+  default_kanji_level: "準2級"   # 実用書の既定（漢検準2級・約1,951字を上限の目安）
+  novel_kanji_level: "2級"       # genre=小説 のときの上限（常用漢字全2,136字まで可）
+
 # style_check の閾値（style/guide.md と対で管理。ガイド改定時はここも見直す）
 style_check:
   kuten_interval_min: 7     # 読点間隔の下限警告（字）

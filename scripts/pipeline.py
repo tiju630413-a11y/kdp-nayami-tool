@@ -76,7 +76,42 @@ REVIEW_PERSPECTIVES = {
         ["books の baseline.md", "data/author_assets/assets.json（追加注入の候補出しに使う）"],
         "固有事例・断言・命名フレームワーク・実行装置の4面のうち、1面でも baseline を明確に上回れない章がある",
     ),
+    "jp_quality": (
+        "日本語品質番人",
+        "日本語の質を三軸（漢字水準・誤用・自然さ）で校閲し、japanese_quality_prompt.md を唯一の基準に要修正箇所を洗い出す校閲者",
+        ["japanese_quality_prompt.md（三軸の基準・唯一の参照元）"],
+        "軸1（漢字水準：ジャンル上限を超える難読漢字を開いていない）・軸2（誤用：ら抜き/さ入れ/主述のねじれ/二重敬語/慣用句の誤用/重言/表記ゆれ等）・軸3（自然さ：同長文3連続・段落頭の接続詞連発・同一語尾4連続・AI常套句等）のいずれかで『要修正』にあたる箇所がある（該当軸を明記）",
+    ),
 }
+
+# jp_quality 観点にだけ足す追加指示（三軸の判定行と、ジャンル別の漢字上限）
+JP_QUALITY_EXTRA = """
+## 三軸の判定（findings 表の前に必ず記載）
+- 漢字水準: 合格 / 要修正
+- 誤用: 合格 / 要修正
+- 自然さ: 合格 / 要修正
+
+各指摘は「該当箇所の引用・軸（漢字/誤用/自然さ）・問題・修正案」を含めること。
+修正は原文の意図・雰囲気を壊さない範囲にとどめる（過剰な書き換えはしない）。
+「要修正」が一つでもある箇所は重大指摘として SEVERE_COUNT に数える。
+"""
+
+
+def resolve_kanji_level(book):
+    """book.json の genre（未指定＝実用書）から、この本の漢字上限を settings で解決する。"""
+    cfg = load_settings()
+    jq = cfg.get("japanese_quality", {}) if isinstance(cfg, dict) else {}
+    default_level = jq.get("default_kanji_level", "準2級")
+    novel_level = jq.get("novel_kanji_level", "2級")
+    genre = "実用書"
+    bj = book / "book.json"
+    if bj.exists():
+        try:
+            genre = json.loads(bj.read_text(encoding="utf-8")).get("genre") or "実用書"
+        except (ValueError, OSError):
+            pass
+    level = novel_level if genre == "小説" else default_level
+    return genre, level
 
 
 def stage_done(book, stage, artifact):
@@ -202,6 +237,13 @@ def cmd_review(book, rnd, collect):
     for key, (name, persona, refs, severe) in REVIEW_PERSPECTIVES.items():
         task = rdir / f"{key}_task.md"
         refs_lines = "\n".join(f"- {r}" for r in refs)
+        extra = ""
+        if key == "jp_quality":
+            genre, level = resolve_kanji_level(book)
+            extra = (f"\n## この本のジャンルと漢字上限\n"
+                     f"- ジャンル: {genre} ／ 漢字上限: {level}"
+                     f"（実用書＝準2級厳守／小説＝2級まで可。基準は japanese_quality_prompt.md 軸1）\n"
+                     + JP_QUALITY_EXTRA)
         task.write_text(f"""# レビュー任務: {name}
 
 あなたは{persona}です。以下の原稿を批評してください。
@@ -216,7 +258,7 @@ def cmd_review(book, rnd, collect):
 
 ## 重大指摘の基準（該当すれば「重大」）
 {severe}
-
+{extra}
 ## 出力形式
 `books/{book.name}/reviews/round{rnd}/{key}_findings.md` に保存:
 
@@ -225,7 +267,7 @@ def cmd_review(book, rnd, collect):
 
 最終行に必ず: `SEVERE_COUNT: <重大指摘の数>`
 """, encoding="utf-8")
-    print(f"観点別指示書 6枚: {rdir.relative_to(ROOT)}/*_task.md")
+    print(f"観点別指示書 {len(REVIEW_PERSPECTIVES)}枚: {rdir.relative_to(ROOT)}/*_task.md")
     print("各指示書を独立したコンテキストで実行後: "
           f"python3 scripts/pipeline.py review {nnn} --round {rnd} --collect")
     return 0
@@ -305,6 +347,22 @@ def cmd_gate(book):
     hr = book / "human_readthrough.md"
     results.append((10, "PASS" if hr.exists() else "MANUAL",
                     "人間の通読1回（human_readthrough.md に修正数と還流先を記録）"))
+
+    # 11. 日本語三軸品質（jp_quality レビュー合格＝要修正ゼロ）。基準は japanese_quality_prompt.md
+    rounds = sorted((book / "reviews").glob("round*"),
+                    key=lambda p: int(re.sub(r"\D", "", p.name) or 0))
+    jpf = next((r / "jp_quality_findings.md" for r in reversed(rounds)
+                if (r / "jp_quality_findings.md").exists()), None)
+    genre, level = resolve_kanji_level(book)
+    if jpf is None:
+        results.append((11, "MANUAL", f"日本語三軸品質（jp_quality 未実施／漢字上限 {level}）"
+                        "。review_loop で jp_quality を回す"))
+    else:
+        m = re.search(r"SEVERE_COUNT:\s*(\d+)", jpf.read_text(encoding="utf-8"))
+        nsev = int(m.group(1)) if m else -1
+        results.append((11, "PASS" if nsev == 0 else "FAIL",
+                        f"日本語三軸品質（漢字水準・誤用・自然さ）要修正 {max(nsev,0)}件"
+                        f"／漢字上限 {level}（{genre}）"))
 
     print(f"=== 品質ゲート: {book.name} ===")
     fails = 0
