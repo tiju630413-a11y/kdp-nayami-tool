@@ -187,12 +187,15 @@ kdp-nayami-tool/
 「〜ではないでしょうか」「いかがでしたか」「〜と言えるでしょう」
 「本記事では」「まとめると」等、AI 文体の指標語を列挙（50〜100 語）
 
-**japanese_quality_prompt.md** — 日本語品質の三軸（唯一の参照元）:
+**japanese_quality_prompt.md** — 日本語品質の四軸（唯一の参照元）:
 漢字水準（漢検準2級を上限の目安・ジャンル別に切替）／誤用（日本語検定の観点）／
-自然さ（AI生成に見えない文体）。執筆側（03_draft・05_style）とレビュー側
-（04_review_loop の観点 jp_quality）が、内容をコピーせずこのファイルを参照する。
-ジャンル別の漢字上限は config/settings.yaml の japanese_quality と book.json の
-genre で切り替える（実用書＝準2級厳守／小説＝2級まで可）。
+自然さ（AI生成に見えない文体・句読点や！？の過剰やAI的な二重引用符""を避ける）／
+仕上げの精度（一文一義・指示語の多用回避・近接の同語反復回避・表記統一）。
+執筆側（03_draft・05_style）とレビュー側（04_review_loop の観点 jp_quality）が、
+内容をコピーせずこのファイルを参照する。機械検出できる項目（AI引用符・感嘆符の
+乱発・1文の読点過多）は style_check.py が WARN で拾う。ジャンル別の漢字上限は
+config/settings.yaml の japanese_quality と book.json の genre で切り替える
+（実用書＝準2級厳守／小説＝2級まで可）。
 
 **style/review_checklist.md** — **星1レビュー逆算チェックリスト**:
 低評価の典型理由を先回りで潰す判定基準を定義する。

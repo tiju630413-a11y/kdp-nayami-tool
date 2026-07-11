@@ -38,6 +38,8 @@ style_check:
   max_same_ending_run: 2    # 同一文末の連続許容回数
   max_paragraph_chars: 400  # 1段落の上限字数（WARN）
   min_concrete_per_chapter: 3  # 章あたり具体性マーカー（たとえば/ケース/場面等）の最低出現数
+  max_kuten_per_sentence: 5  # 1文の読点上限（超でWARN。句読点の過剰使用検出）
+  max_exclaim_per_1000: 3    # ！／？の1000字あたり上限（超でWARN。乱発検出）
 
 # KDP 規約関連（コードでなくデータで持つ）
 kdp:

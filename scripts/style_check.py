@@ -10,6 +10,9 @@
   6. 具体性密度（「たとえば」「ケース」「場面」等の章あたり出現数）
   7. 診断的表現の検出（医療・法律・金銭の断定）
   8. 簡易誤字パス（重複助詞・重ね言葉）
+  9. AI的な二重引用符（" " " 等）の検出（日本語は「」『』）
+  10. 感嘆符・疑問符の乱発（1000字あたり／連続）
+  11. 1文の読点過多（句読点の過剰使用）
 
 使い方:
   python3 scripts/style_check.py <原稿.md> [--json] [--min-chars N]
@@ -32,7 +35,12 @@ DEFAULTS = {
     "max_same_ending_run": 2,
     "max_paragraph_chars": 400,
     "min_concrete_per_chapter": 3,
+    "max_kuten_per_sentence": 5,   # 1文の読点上限（超で WARN。句読点の過剰使用検出）
+    "max_exclaim_per_1000": 3,     # ！／？ の1000字あたり上限（超で WARN。乱発検出）
 }
+
+# AIがよく使う二重引用符（日本語本文では「」『』を使う）。半角"・全角“”・〝〟
+AI_QUOTE_CHARS = ['"', "“", "”", "〝", "〟"]
 
 CONCRETE_MARKERS = ["たとえば", "例えば", "ケース", "場面", "ある日", "あるとき",
                     "実際に", "具体的に", "台本", "ワーク"]
@@ -194,6 +202,41 @@ def check(path, cfg):
     for pat, label in TYPO_PATTERNS:
         for m in re.finditer(pat, body):
             issues.append(("WARN", f"{label}: …{m.group(0)}…"))
+
+    # 9. AI的な二重引用符（日本語本文は「」『』）。WARN で全数を挙げ style_pass で解消
+    quote_hits = sum(body.count(q) for q in AI_QUOTE_CHARS)
+    stats["ai_quote_hits"] = quote_hits
+    if quote_hits:
+        found = "".join(q for q in AI_QUOTE_CHARS if q in body)
+        issues.append(("WARN", f"AI的な二重引用符 {quote_hits}箇所（{found}）"
+                               "。会話・引用は「」、書名は『』、強調は最小限に置き換える"))
+
+    # 10. 感嘆符・疑問符の乱発
+    exclaim = len(re.findall(r"[！!？?]", body_flat))
+    stats["exclaim_marks"] = exclaim
+    if total >= 200:
+        per1000 = exclaim * 1000 / max(total, 1)
+        if per1000 > cfg["max_exclaim_per_1000"]:
+            issues.append(("WARN", f"感嘆符・疑問符 {exclaim}個（1000字あたり{per1000:.1f}"
+                                   f"／目安{cfg['max_exclaim_per_1000']}）。乱発を抑える"))
+    for m in re.finditer(r"[！!？?]{2,}", body_flat):
+        issues.append(("WARN", f"感嘆符・疑問符の連続「{m.group(0)}」。1つにする"))
+
+    # 11. 1文の読点過多（句読点の過剰使用）。表・箇条書きは散文でないため除外
+    over = []
+    for ln in strip_markup(raw).splitlines():
+        s0 = ln.strip()
+        if not s0 or s0.startswith("|") or set(s0) <= set("|-: 　"):
+            continue                                   # 表の行は除外
+        s0 = re.sub(r"^([-*・]|\d+[.\)、]|[①-⑳])\s*", "", s0)  # 箇条書き先頭記号を除去
+        for sent in re.split(r"(?<=[。！？!?])", s0):
+            n = sent.count("、")
+            if n > cfg["max_kuten_per_sentence"]:
+                over.append((n, sent.strip()[:30]))
+    stats["over_comma_sentences"] = len(over)
+    for n, ctx in over[:10]:
+        issues.append(("WARN", f"1文に読点{n}個（>{cfg['max_kuten_per_sentence']}）"
+                               f"。文を割る: …{ctx}…"))
 
     fails = [m for s, m in issues if s == "FAIL"]
     warns = [m for s, m in issues if s == "WARN"]
